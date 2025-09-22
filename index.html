@@ -3,30 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Media Growth Platform</title>
+<title>Social Growth Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+/* === Global Styles === */
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{background:#e0eafc;display:flex;flex-direction:column;min-height:100vh;}
+body{background:linear-gradient(120deg,#e0eafc,#cfdef3);min-height:100vh;display:flex;flex-direction:column;}
 .container{width:95%;max-width:1200px;margin:auto;padding:20px;}
-h1{text-align:center;margin-bottom:20px;color:#333;}
+h1{text-align:center;color:#333;margin-bottom:20px;}
 .tab{display:flex;justify-content:center;margin-bottom:30px;}
-.tab button{padding:10px 20px;border:none;cursor:pointer;background:#fff;border-radius:10px 10px 0 0;margin-right:5px;font-weight:600;transition:0.3s;}
-.tab button.active{background:#6c63ff;color:white;}
-.tabcontent{display:none;background:#fff;padding:20px;border-radius:0 10px 10px 10px;box-shadow:0 10px 20px rgba(0,0,0,0.05);}
-input,select{width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
-button.action{padding:10px 20px;background:#6c63ff;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:0.3s;}
+.tab button{padding:12px 25px;border:none;border-radius:10px 10px 0 0;margin-right:5px;font-weight:600;cursor:pointer;background:#fff;transition:0.3s;}
+.tab button.active{background:#6c63ff;color:#fff;}
+.tabcontent{display:none;background:#fff;padding:25px;border-radius:0 10px 10px 10px;box-shadow:0 10px 20px rgba(0,0,0,0.05);}
+input,select{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
+button.action{padding:12px 20px;background:#6c63ff;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:0.3s;}
 button.action:hover{background:#574fd6;}
-.campaign-card{background:rgba(255,255,255,0.8);padding:15px;border-radius:15px;margin-bottom:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
-.campaign-card:hover{transform:translateY(-5px);transition:0.3s;}
+.campaign-card{background:rgba(255,255,255,0.85);padding:15px;border-radius:15px;margin-bottom:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:center;gap:15px;transition:0.3s;}
+.campaign-card:hover{transform:translateY(-5px);}
+.campaign-icon{width:60px;height:60px;}
 .toast{position:fixed;bottom:20px;right:20px;background:#6c63ff;color:white;padding:15px 20px;border-radius:10px;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.2);}
-.profile{margin-bottom:20px;background:#fff;padding:15px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+.profile{margin-bottom:20px;background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+.task-select{margin:15px 0;}
+.task-select select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>Social Media Growth Platform</h1>
 
+<!-- Tabs -->
 <div class="tab">
 <button class="tablinks active" onclick="openTab(event,'login')">Login / Guest</button>
 <button class="tablinks" onclick="openTab(event,'signup')">Sign Up</button>
@@ -59,6 +64,18 @@ button.action:hover{background:#574fd6;}
 <button class="action" onclick="logoutUser()">Logout</button>
 </div>
 
+<!-- Task Type Selection -->
+<div class="task-select" id="taskSelector" style="display:none;">
+<select id="taskTypeFilter" onchange="loadCampaigns()">
+<option value="all">All Platforms</option>
+<option value="youtube_sub">YouTube Subscribers</option>
+<option value="fb_followers">Facebook Followers</option>
+<option value="insta_followers">Instagram Followers</option>
+<option value="tiktok_followers">TikTok Followers</option>
+<option value="twitter_followers">Twitter Followers</option>
+</select>
+</div>
+
 <!-- Campaigns -->
 <div id="campaignsList"></div>
 </div>
@@ -71,7 +88,7 @@ button.action:hover{background:#574fd6;}
 
 <script>
 const firebaseConfig = {
-apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJr7oyXngo",
+apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJroyXngo",
 authDomain: "fir-b136e.firebaseapp.com",
 projectId: "fir-b136e",
 storageBucket: "fir-b136e.appspot.com",
@@ -82,16 +99,17 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// === Tabs ===
 function openTab(evt, tabName){
-var i, tabcontent, tablinks;
-tabcontent = document.getElementsByClassName("tabcontent");
-for(i=0;i<tabcontent.length;i++){tabcontent[i].style.display="none";}
-tablinks = document.getElementsByClassName("tablinks");
-for(i=0;i<tablinks.length;i++){tablinks[i].className = tablinks[i].className.replace(" active","");}
+let tabcontent = document.getElementsByClassName("tabcontent");
+for(let i=0;i<tabcontent.length;i++){tabcontent[i].style.display="none";}
+let tablinks = document.getElementsByClassName("tablinks");
+for(let i=0;i<tablinks.length;i++){tablinks[i].className = tablinks[i].className.replace(" active","");}
 document.getElementById(tabName).style.display="block";
 evt.currentTarget.className+=" active";
 }
 
+// === Toast Notification ===
 function showToast(msg){
 const toast = document.getElementById("toast");
 toast.innerText = msg;
@@ -99,8 +117,15 @@ toast.style.display = "block";
 setTimeout(()=>{toast.style.display="none";},3000);
 }
 
-function guestMode(){ loadCampaigns(); showToast("Guest mode: login to earn points."); }
+// === Guest Mode ===
+function guestMode(){
+loadCampaigns();
+document.getElementById("profile").style.display="none";
+document.getElementById("taskSelector").style.display="none";
+showToast("Guest mode: login to earn points.");
+}
 
+// === Sign Up ===
 function signUpUser(){
 const first = document.getElementById("firstName").value;
 const last = document.getElementById("lastName").value;
@@ -118,6 +143,9 @@ loadUser();
 }).catch(err=>showToast(err.message));
 }
 
+function signUpWithGoogle(){ loginWithGoogle(); }
+
+// === Login ===
 function loginUser(){
 const email = document.getElementById("loginEmail").value;
 const password = document.getElementById("loginPassword").value;
@@ -134,14 +162,15 @@ auth.signInWithPopup(provider)
 .catch(err=>showToast(err.message));
 }
 
-function signUpWithGoogle(){ loginWithGoogle(); }
+// === Logout ===
+function logoutUser(){ auth.signOut(); guestMode(); showToast("Logged out!"); }
 
-function logoutUser(){ auth.signOut(); document.getElementById("profile").style.display="none"; showToast("Logged out!"); }
-
+// === Load User ===
 function loadUser(){
 const user = auth.currentUser;
 if(user){
 document.getElementById("profile").style.display="block";
+document.getElementById("taskSelector").style.display="block";
 db.collection("user1").doc(user.uid).get().then(doc=>{
 if(doc.exists){
 document.getElementById("userName").innerText = "Welcome, "+doc.data().Name;
@@ -153,40 +182,64 @@ loadCampaigns();
 }
 }
 
+// === Load Campaigns with Filter ===
 function loadCampaigns(){
 const campaignsDiv = document.getElementById("campaignsList");
 campaignsDiv.innerHTML = "<h2>Active Campaigns</h2>";
+const filter = document.getElementById("taskTypeFilter")?.value || "all";
 db.collection("campaigns").get().then(snapshot=>{
 snapshot.forEach(doc=>{
 const c = doc.data();
+if(filter!="all" && c.type!=filter) return;
 const card = document.createElement("div");
-card.className = "campaign-card";
-card.innerHTML = `
-<h4>Type: ${c.type}</h4>
-<p>Target Link: <a href="${c.targetLink}" target="_blank">${c.targetLink}</a></p>
-<p>Reward Points: ${c.rewardPoints}</p>
-<p>Slots Left: ${c.activeSlots}</p>
-<button class="action" onclick="completeTask('${doc.id}',${c.rewardPoints},${c.activeSlots})">Mark Task Completed</button>
-`;
+card.className="campaign-card";
+let iconUrl="";
+switch(c.type){
+case "youtube_sub": iconUrl="https://www.svgrepo.com/show/303145/youtube.svg"; break;
+case "fb_followers": iconUrl="https://www.svgrepo.com/show/157806/facebook.svg"; break;
+case "insta_followers": iconUrl="https://www.svgrepo.com/show/111199/instagram.svg"; break;
+case "tiktok_followers": iconUrl="https://www.svgrepo.com/show/354081/tiktok-logo.svg"; break;
+case "twitter_followers": iconUrl="https://www.svgrepo.com/show/303136/twitter.svg"; break;
+default: iconUrl="https://www.svgrepo.com/show/303145/youtube.svg";
+}
+card.innerHTML=`<img src="${iconUrl}" class="campaign-icon">
+<div>
+<h4>${c.type.replace("_"," ").toUpperCase()}</h4>
+<p>Reward: ${c.rewardPoints} points | Slots: ${c.activeSlots}</p>
+<button class="action" onclick="completeTask('${doc.id}',${c.rewardPoints})">Complete Task</button>
+</div>`;
 campaignsDiv.appendChild(card);
 });
 });
 }
 
-function completeTask(campaignId,points,slots){
+// === Complete Task ===
+function completeTask(campaignId, rewardPoints){
 const user = auth.currentUser;
-if(!user){ showToast("Login to complete task!"); return; }
-if(slots<=0){ showToast("No slots left!"); return;}
+if(!user){ showToast("Login required to complete task."); return;}
+const uid = user.uid;
 db.collection("tasks_done").add({
-userId:user.uid,
+userId:uid,
 campaignId:campaignId,
 completedAt:firebase.firestore.FieldValue.serverTimestamp(),
 verified:false
-}).then(()=>showToast("Task marked. Waiting for admin verification."));
+}).then(()=>{
+db.collection("transactions").add({
+userId:uid,
+amount:+rewardPoints,
+type:"earn",
+relatedId:campaignId,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+showToast("Task submitted for verification!");
+loadUser();
+}).catch(err=>showToast(err.message));
 }
 
-auth.onAuthStateChanged(user=>{ if(user) loadUser(); });
-guestMode();
+// === Auth State Listener ===
+auth.onAuthStateChanged(user=>{
+if(user){ loadUser(); }else{ guestMode(); }
+});
 </script>
 </body>
 </html>
