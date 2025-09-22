@@ -8,23 +8,23 @@
 <style>
 /* === Global Styles === */
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{background:linear-gradient(120deg,#e0eafc,#cfdef3);min-height:100vh;display:flex;flex-direction:column;}
+body{background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;color:#333;display:flex;flex-direction:column;}
 .container{width:95%;max-width:1200px;margin:auto;padding:20px;}
-h1{text-align:center;color:#333;margin-bottom:20px;}
+h1{text-align:center;color:white;margin-bottom:30px;font-size:2.5rem;text-shadow:0 3px 10px rgba(0,0,0,0.3);}
 .tab{display:flex;justify-content:center;margin-bottom:30px;}
-.tab button{padding:12px 25px;border:none;border-radius:10px 10px 0 0;margin-right:5px;font-weight:600;cursor:pointer;background:#fff;transition:0.3s;}
+.tab button{padding:12px 25px;border:none;border-radius:10px 10px 0 0;margin-right:5px;font-weight:600;cursor:pointer;background:#fff;transition:0.3s;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
 .tab button.active{background:#6c63ff;color:#fff;}
-.tabcontent{display:none;background:#fff;padding:25px;border-radius:0 10px 10px 10px;box-shadow:0 10px 20px rgba(0,0,0,0.05);}
-input,select{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
-button.action{padding:12px 20px;background:#6c63ff;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:0.3s;}
+.tabcontent{display:none;background:rgba(255,255,255,0.95);padding:25px;border-radius:0 10px 10px 10px;box-shadow:0 10px 20px rgba(0,0,0,0.15);}
+input,select{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;font-size:1rem;}
+button.action{padding:12px 20px;background:#6c63ff;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:0.3s;font-weight:600;}
 button.action:hover{background:#574fd6;}
-.campaign-card{background:rgba(255,255,255,0.85);padding:15px;border-radius:15px;margin-bottom:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);display:flex;align-items:center;gap:15px;transition:0.3s;}
-.campaign-card:hover{transform:translateY(-5px);}
+.campaign-card{background:rgba(255,255,255,0.9);padding:15px;border-radius:15px;margin-bottom:15px;box-shadow:0 8px 25px rgba(0,0,0,0.1);display:flex;align-items:center;gap:15px;transition:0.3s;}
+.campaign-card:hover{transform:translateY(-5px) scale(1.02);}
 .campaign-icon{width:60px;height:60px;}
-.toast{position:fixed;bottom:20px;right:20px;background:#6c63ff;color:white;padding:15px 20px;border-radius:10px;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.2);}
-.profile{margin-bottom:20px;background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+.toast{position:fixed;bottom:20px;right:20px;background:#6c63ff;color:white;padding:15px 20px;border-radius:10px;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+.profile{margin-bottom:20px;background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
 .task-select{margin:15px 0;}
-.task-select select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;}
+.task-select select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;font-weight:600;}
 </style>
 </head>
 <body>
@@ -87,15 +87,15 @@ button.action:hover{background:#574fd6;}
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
-// === Firebase config from your project ===
+// === Firebase Config ===
 const firebaseConfig = {
-  apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJr7oyXngo",
-  authDomain: "fir-b136e.firebaseapp.com",
-  projectId: "fir-b136e",
-  storageBucket: "fir-b136e.appspot.com",
-  messagingSenderId: "955519644624",
-  appId: "1:955519644624:web:9c7bc8fe6271e72cbaffd5",
-  measurementId: "G-Z716CNT2MQ"
+apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJr7oyXngo",
+authDomain: "fir-b136e.firebaseapp.com",
+projectId: "fir-b136e",
+storageBucket: "fir-b136e.appspot.com",
+messagingSenderId: "955519644624",
+appId: "1:955519644624:web:9c7bc8fe6271e72cbaffd5",
+measurementId: "G-Z716CNT2MQ"
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -111,7 +111,7 @@ document.getElementById(tabName).style.display="block";
 evt.currentTarget.className+=" active";
 }
 
-// === Toast Notification ===
+// === Toast ===
 function showToast(msg){
 const toast = document.getElementById("toast");
 toast.innerText = msg;
@@ -144,7 +144,6 @@ showToast("Sign Up Successful!");
 loadUser();
 }).catch(err=>showToast(err.message));
 }
-
 function signUpWithGoogle(){ loginWithGoogle(); }
 
 // === Login ===
@@ -156,7 +155,6 @@ auth.signInWithEmailAndPassword(email,password)
 .then(()=>{loadUser(); showToast("Logged in successfully!");})
 .catch(err=>showToast(err.message));
 }
-
 function loginWithGoogle(){
 const provider = new firebase.auth.GoogleAuthProvider();
 auth.signInWithPopup(provider)
@@ -239,7 +237,7 @@ loadUser();
 }).catch(err=>showToast(err.message));
 }
 
-// === Auth State Listener ===
+// === Auth Listener ===
 auth.onAuthStateChanged(user=>{
 if(user){ loadUser(); }else{ guestMode(); }
 });
