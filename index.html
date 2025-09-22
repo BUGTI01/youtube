@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Growth Platform</title>
+<title>Social Media Growth Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* === Global Styles === */
@@ -87,13 +87,15 @@ button.action:hover{background:#574fd6;}
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
+// === Firebase config from your project ===
 const firebaseConfig = {
-apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJroyXngo",
-authDomain: "fir-b136e.firebaseapp.com",
-projectId: "fir-b136e",
-storageBucket: "fir-b136e.appspot.com",
-messagingSenderId: "955519644624",
-appId: "1:955519644624:web:9c7bc8fe6271e72cbaffd5"
+  apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJr7oyXngo",
+  authDomain: "fir-b136e.firebaseapp.com",
+  projectId: "fir-b136e",
+  storageBucket: "fir-b136e.appspot.com",
+  messagingSenderId: "955519644624",
+  appId: "1:955519644624:web:9c7bc8fe6271e72cbaffd5",
+  measurementId: "G-Z716CNT2MQ"
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -173,32 +175,33 @@ document.getElementById("profile").style.display="block";
 document.getElementById("taskSelector").style.display="block";
 db.collection("user1").doc(user.uid).get().then(doc=>{
 if(doc.exists){
-document.getElementById("userName").innerText = "Welcome, "+doc.data().Name;
-document.getElementById("userEmail").innerText = doc.data().email;
-document.getElementById("userPoints").innerText = doc.data().points;
+document.getElementById("userName").innerText="Welcome, "+doc.data().Name;
+document.getElementById("userEmail").innerText=doc.data().email;
+document.getElementById("userPoints").innerText=doc.data().points;
 }
 });
 loadCampaigns();
-}
+}else{guestMode();}
 }
 
-// === Load Campaigns with Filter ===
+// === Load Campaigns ===
 function loadCampaigns(){
 const campaignsDiv = document.getElementById("campaignsList");
-campaignsDiv.innerHTML = "<h2>Active Campaigns</h2>";
-const filter = document.getElementById("taskTypeFilter")?.value || "all";
+campaignsDiv.innerHTML="<p>Loading campaigns...</p>";
+let filter = document.getElementById("taskTypeFilter")?.value || "all";
 db.collection("campaigns").get().then(snapshot=>{
+campaignsDiv.innerHTML="";
 snapshot.forEach(doc=>{
-const c = doc.data();
-if(filter!="all" && c.type!=filter) return;
-const card = document.createElement("div");
+let c = doc.data();
+if(filter!=="all" && c.type!==filter) return;
+let card = document.createElement("div");
 card.className="campaign-card";
 let iconUrl="";
 switch(c.type){
 case "youtube_sub": iconUrl="https://www.svgrepo.com/show/303145/youtube.svg"; break;
-case "fb_followers": iconUrl="https://www.svgrepo.com/show/157806/facebook.svg"; break;
-case "insta_followers": iconUrl="https://www.svgrepo.com/show/111199/instagram.svg"; break;
-case "tiktok_followers": iconUrl="https://www.svgrepo.com/show/354081/tiktok-logo.svg"; break;
+case "fb_followers": iconUrl="https://www.svgrepo.com/show/303146/facebook.svg"; break;
+case "insta_followers": iconUrl="https://www.svgrepo.com/show/303138/instagram.svg"; break;
+case "tiktok_followers": iconUrl="https://www.svgrepo.com/show/303139/tiktok.svg"; break;
 case "twitter_followers": iconUrl="https://www.svgrepo.com/show/303136/twitter.svg"; break;
 default: iconUrl="https://www.svgrepo.com/show/303145/youtube.svg";
 }
