@@ -253,7 +253,7 @@
     <script type="module">
         // Provided by the environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' && __firebase_config !== '' ? __firebase_config : '{}');
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Firebase SDK imports
@@ -467,6 +467,11 @@
         // Initialize Firebase app and auth state listener
         window.onload = async () => {
             try {
+                 if (Object.keys(firebaseConfig).length === 0) {
+                     console.error("Firebase config is empty. Please ensure __firebase_config is correctly provided.");
+                     showMessage("Failed to initialize Firebase. Configuration is missing or invalid.");
+                     return;
+                 }
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
