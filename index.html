@@ -271,6 +271,7 @@
         let auth;
         let userId = null;
         let unsubscribeListeners = [];
+        let isFirebaseInitialized = false;
 
         // UI Elements
         const mainApp = document.getElementById('main-app');
@@ -383,6 +384,7 @@
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Authentication is not available."); return; }
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             try {
@@ -396,6 +398,7 @@
 
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Authentication is not available."); return; }
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             try {
@@ -408,6 +411,7 @@
         });
 
         logoutBtn.addEventListener('click', async () => {
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Authentication is not available."); return; }
             try {
                 await signOut(auth);
                 showMessage("Logged out successfully.");
@@ -419,6 +423,7 @@
 
         updateDetailsForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Account updates are not available."); return; }
             const newEmail = document.getElementById('update-email').value;
             const newPassword = document.getElementById('update-password').value;
             const user = auth.currentUser;
@@ -466,46 +471,52 @@
 
         // Initialize Firebase app and auth state listener
         window.onload = async () => {
-            try {
-                 if (Object.keys(firebaseConfig).length === 0) {
-                     console.error("Firebase config is empty. Please ensure __firebase_config is correctly provided.");
-                     showMessage("Failed to initialize Firebase. Configuration is missing or invalid.");
-                     return;
-                 }
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
+            if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
+                console.error("Firebase config is empty. The app will run in a limited, non-persistent mode.");
+                showMessage("App is in DEMO MODE. No Firebase config was provided, so data will not be saved.", false);
+                isFirebaseInitialized = false;
+                // Fallback UI rendering for demo mode
+                userIdDisplay.textContent = `User ID: Guest`;
+                startRealtimeListeners(); // This will not fetch real data but will set up empty listeners
+            } else {
+                try {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    isFirebaseInitialized = true;
 
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.textContent = `User ID: ${userId.substring(0, 8)}...`;
-                        authFormsSection.classList.add('hidden');
-                        profileSection.classList.remove('hidden');
-                        profileEmailDisplay.textContent = user.email;
-                        startRealtimeListeners();
-                    } else {
-                        userId = null;
-                        userIdDisplay.textContent = `User ID: Guest`;
-                        authFormsSection.classList.remove('hidden');
-                        profileSection.classList.add('hidden');
-                        // Unsubscribe old listeners
-                        unsubscribeListeners.forEach(unsubscribe => unsubscribe());
-                        unsubscribeListeners = [];
-                        // Clear the UI data for guests
-                        earnedPointsDisplay.textContent = '0';
-                        pendingPointsDisplay.textContent = '0';
-                        document.getElementById('dashboard-earned-points').textContent = '0';
-                        document.getElementById('dashboard-pending-points').textContent = '0';
-                        document.getElementById('dashboard-active-campaigns').textContent = '0';
-                        myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to view your campaigns.</p>`;
-                        verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to verify tasks.</p>`;
-                    }
-                    renderAds();
-                });
-            } catch (error) {
-                console.error("Firebase Initialization Error:", error);
-                showMessage("Failed to initialize Firebase. Please check the console.");
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            userIdDisplay.textContent = `User ID: ${userId.substring(0, 8)}...`;
+                            authFormsSection.classList.add('hidden');
+                            profileSection.classList.remove('hidden');
+                            profileEmailDisplay.textContent = user.email;
+                            startRealtimeListeners();
+                        } else {
+                            userId = null;
+                            userIdDisplay.textContent = `User ID: Guest`;
+                            authFormsSection.classList.remove('hidden');
+                            profileSection.classList.add('hidden');
+                            // Unsubscribe old listeners
+                            unsubscribeListeners.forEach(unsubscribe => unsubscribe());
+                            unsubscribeListeners = [];
+                            // Clear the UI data for guests
+                            earnedPointsDisplay.textContent = '0';
+                            pendingPointsDisplay.textContent = '0';
+                            document.getElementById('dashboard-earned-points').textContent = '0';
+                            document.getElementById('dashboard-pending-points').textContent = '0';
+                            document.getElementById('dashboard-active-campaigns').textContent = '0';
+                            myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to view your campaigns.</p>`;
+                            verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to verify tasks.</p>`;
+                        }
+                        renderAds();
+                    });
+                } catch (error) {
+                    console.error("Firebase Initialization Error:", error);
+                    showMessage("Failed to initialize Firebase. Please check the console.");
+                    isFirebaseInitialized = false;
+                }
             }
         };
 
@@ -670,6 +681,7 @@
         // Event listener for task completion buttons
         document.addEventListener('click', async (e) => {
             if (e.target.classList.contains('complete-task-btn')) {
+                if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
                 if (!userId) {
                     showView('view-account');
                     authMessageText.textContent = "You must be logged in to complete a task and submit proof.";
@@ -708,6 +720,7 @@
             }
 
             if (e.target.classList.contains('approve-btn')) {
+                if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
                 const proofId = e.target.dataset.proofId;
                 const proofDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'proofs', proofId);
                 
@@ -738,6 +751,7 @@
             }
 
             if (e.target.classList.contains('reject-btn')) {
+                if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
                 const proofId = e.target.dataset.proofId;
                 const proofDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'proofs', proofId);
                 await updateDoc(proofDocRef, { status: 'rejected' });
@@ -765,6 +779,7 @@
         
         adsContainer.addEventListener('click', async (e) => {
             if (e.target.classList.contains('watch-ad-btn')) {
+                if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
                 if (!userId) {
                     showView('view-account');
                     authMessageText.textContent = "You must be logged in to watch an ad and earn points.";
@@ -828,6 +843,7 @@
         // Event listener for campaign creation form
         createCampaignForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
             
             if (!userId) {
                 showView('view-account');
@@ -922,6 +938,7 @@
         
         // Simulates another user creating a campaign
         simulateTaskBtn.addEventListener('click', async () => {
+            if (!isFirebaseInitialized) { showMessage("App is in demo mode. Functionality not available."); return; }
              const simulatedUserId = `simulated_user_${Math.random().toString(36).substring(2, 15)}`;
              const simulatedPlatform = 'youtube';
              const simulatedUrl = `https://www.youtube.com/watch?v=mock_video_${Math.floor(Math.random() * 1000)}`;
