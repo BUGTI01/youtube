@@ -1,152 +1,948 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Media Growth Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* --- Global Styles --- */
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;color:#333;display:flex;flex-direction:column;}
-.container{width:95%;max-width:1200px;margin:auto;padding:20px;}
-h1{text-align:center;color:white;margin-bottom:30px;font-size:2.5rem;text-shadow:0 3px 10px rgba(0,0,0,0.3);}
-.tab{display:flex;justify-content:center;margin-bottom:30px;}
-.tab button{padding:12px 25px;border:none;border-radius:10px 10px 0 0;margin-right:5px;font-weight:600;cursor:pointer;background:#fff;transition:0.3s;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-.tab button.active{background:#6c63ff;color:#fff;}
-.tabcontent{display:none;background:rgba(255,255,255,0.95);padding:25px;border-radius:0 10px 10px 10px;box-shadow:0 10px 20px rgba(0,0,0,0.15);}
-input,select{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;font-size:1rem;}
-button.action{padding:12px 20px;background:#6c63ff;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:0.3s;font-weight:600;}
-button.action:hover{background:#574fd6;}
-.campaign-card{background:rgba(255,255,255,0.9);padding:15px;border-radius:15px;margin-bottom:15px;box-shadow:0 8px 25px rgba(0,0,0,0.1);display:flex;align-items:center;gap:15px;transition:0.3s;}
-.campaign-card:hover{transform:translateY(-5px) scale(1.02);}
-.campaign-icon{width:60px;height:60px;}
-.toast{position:fixed;bottom:20px;right:20px;background:#6c63ff;color:white;padding:15px 20px;border-radius:10px;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.3);}
-.profile{margin-bottom:20px;background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-.task-select{margin:15px 0;}
-.task-select select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;font-weight:600;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Spark - Social Media Exchange</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social media icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background for a modern feel */
+            color: #e2e8f0;
+        }
+        .gradient-bg {
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .dashboard-card {
+            background-color: #2d3748;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .nav-link.active {
+            background-color: #4a5568;
+        }
+        /* Custom scrollbar for better UI */
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background-color: #718096;
+            border-radius: 4px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background-color: #2d3748;
+        }
+        .points-pulse {
+            animation: pulse-effect 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-effect {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: .5;
+                transform: scale(1.05);
+            }
+        }
+    </style>
 </head>
-<body>
-<div class="container">
-<h1>Social Media Growth Platform</h1>
+<body class="flex flex-col items-center justify-start min-h-screen p-4">
 
-<!-- Tabs -->
-<div class="tab">
-<button class="tablinks active" onclick="openTab(event,'login')">Login / Guest</button>
-<button class="tablinks" onclick="openTab(event,'signup')">Sign Up</button>
-</div>
+    <!-- Main App Container -->
+    <div id="main-app" class="w-full max-w-5xl dashboard-card p-8 mt-10 space-y-8">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-gray-700">
+            <h1 class="text-3xl font-bold text-white mb-4 sm:mb-0">Social Spark</h1>
+            <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm font-semibold text-gray-400">
+                <span id="user-id-display" class="text-xs">User ID: Guest</span>
+                <div class="flex items-center space-x-2 p-2 rounded-lg gradient-bg text-white shadow-lg points-pulse">
+                    <span>Points:</span>
+                    <span id="earned-points-display" class="text-lg font-bold">0</span>
+                    <span class="text-xs">(<span id="pending-points-display">0</span> Pending)</span>
+                </div>
+            </div>
+        </header>
 
-<!-- Login / Guest -->
-<div id="login" class="tabcontent" style="display:block;">
-<input type="email" id="loginEmail" placeholder="Email">
-<input type="password" id="loginPassword" placeholder="Password">
-<button class="action" onclick="loginUser()">Login</button>
-<button class="action" onclick="loginWithGoogle()">Login with Google</button>
-<button class="action" onclick="loginWithFacebook()">Login with Facebook</button>
-<p style="text-align:center;margin-top:15px;">Or continue as <span style="color:#6c63ff; cursor:pointer;" onclick="guestMode()">Guest</span></p>
-</div>
+        <!-- Navigation -->
+        <nav class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <button id="nav-dashboard" class="nav-link active px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Dashboard</button>
+            <button id="nav-tasks" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Earn Points</button>
+            <button id="nav-ads" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Watch Ads</button>
+            <button id="nav-create-campaign" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Create Campaign</button>
+            <button id="nav-my-campaigns" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">My Campaigns</button>
+            <button id="nav-verification" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Verify Tasks</button>
+            <button id="nav-account" class="nav-link px-6 py-3 rounded-xl hover:bg-gray-600 transition-all">Account</button>
+        </nav>
 
-<!-- Sign Up -->
-<div id="signup" class="tabcontent">
-<input type="text" id="firstName" placeholder="First Name">
-<input type="text" id="lastName" placeholder="Last Name">
-<input type="email" id="signEmail" placeholder="Email">
-<input type="password" id="signPassword" placeholder="Password">
-<button class="action" onclick="signUpUser()">Sign Up</button>
-<button class="action" onclick="signUpWithGoogle()">Sign Up with Google</button>
-<button class="action" onclick="signUpWithFacebook()">Sign Up with Facebook</button>
-</div>
+        <!-- Main Content Area -->
+        <main class="mt-8">
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="page-view">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Your Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="dashboard-card p-6 flex flex-col items-center text-center">
+                        <i class="fa-solid fa-star text-4xl text-yellow-400 mb-2"></i>
+                        <span class="text-lg font-bold" id="dashboard-earned-points">0</span>
+                        <p class="text-sm text-gray-400">Earned Points</p>
+                    </div>
+                    <div class="dashboard-card p-6 flex flex-col items-center text-center">
+                        <i class="fa-solid fa-hourglass-half text-4xl text-blue-400 mb-2"></i>
+                        <span class="text-lg font-bold" id="dashboard-pending-points">0</span>
+                        <p class="text-sm text-gray-400">Pending Points</p>
+                    </div>
+                    <div class="dashboard-card p-6 flex flex-col items-center text-center">
+                        <i class="fa-solid fa-rocket text-4xl text-purple-400 mb-2"></i>
+                        <span class="text-lg font-bold" id="dashboard-active-campaigns">0</span>
+                        <p class="text-sm text-gray-400">Active Campaigns</p>
+                    </div>
+                </div>
+            </div>
 
-<!-- Profile -->
-<div id="profile" class="profile" style="display:none;">
-<h3 id="userName">Welcome, User</h3>
-<p>Email: <span id="userEmail"></span></p>
-<p>Points: <span id="userPoints">0</span></p>
-<button class="action" onclick="logoutUser()">Logout</button>
-</div>
+            <!-- Tasks View -->
+            <div id="view-tasks" class="page-view hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Tasks to Earn Points</h2>
+                <button id="simulate-task-btn" class="mb-4 px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-80 transition-colors">Simulate Task from Another User</button>
+                <div id="tasks-list" class="space-y-4 scrollbar-custom max-h-96 overflow-y-auto pr-2">
+                    <!-- Task items will be dynamically added here -->
+                    <p class="text-gray-400 text-center">Loading tasks...</p>
+                </div>
+            </div>
+            
+            <!-- Ads View -->
+            <div id="view-ads" class="page-view hidden flex flex-col items-center text-center">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Watch Ads to Earn Points</h2>
+                <div id="ads-container" class="w-full max-w-xl space-y-4">
+                    <!-- Ad items will be dynamically added here -->
+                </div>
+            </div>
 
-<!-- Task Type Selection -->
-<div class="task-select" id="taskSelector" style="display:none;">
-<select id="taskTypeFilter" onchange="loadCampaigns()">
-<option value="all">All Platforms</option>
-<option value="youtube_sub">YouTube Subscribers</option>
-<option value="fb_followers">Facebook Followers</option>
-<option value="insta_followers">Instagram Followers</option>
-<option value="tiktok_followers">TikTok Followers</option>
-<option value="twitter_followers">Twitter Followers</option>
-</select>
-</div>
+            <!-- Create Campaign View -->
+            <div id="view-create-campaign" class="page-view hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Create a New Campaign</h2>
+                <form id="create-campaign-form" class="space-y-4">
+                    <div>
+                        <label for="platform" class="block text-gray-300">Campaign Type</label>
+                        <select id="platform" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            <option value="">Select a type</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="website-traffic">Website Traffic</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="url" class="block text-gray-300">Profile/Page URL</label>
+                        <input type="url" id="url" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g., https://youtube.com/channel/..." required>
+                    </div>
+                    <div>
+                        <label for="points-per-task" class="block text-gray-300">Points per Task</label>
+                        <input type="number" id="points-per-task" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" min="1" max="1000" value="100" required>
+                    </div>
+                    <div>
+                        <label for="total-budget" class="block text-gray-300">Total Budget (in points)</label>
+                        <input type="number" id="total-budget" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" min="100" required>
+                    </div>
+                    <div id="campaign-summary" class="dashboard-card p-4 text-sm text-gray-400">
+                        <!-- Summary will be populated here -->
+                    </div>
+                    <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Create Campaign</button>
+                    <div id="create-campaign-message" class="text-center mt-4"></div>
+                </form>
+            </div>
 
-<!-- Campaigns -->
-<div id="campaignsList"></div>
-</div>
+            <!-- My Campaigns View -->
+            <div id="view-my-campaigns" class="page-view hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">My Campaigns</h2>
+                <div id="my-campaigns-list" class="space-y-4 scrollbar-custom max-h-96 overflow-y-auto pr-2">
+                    <!-- My campaigns will be dynamically added here -->
+                    <p class="text-gray-400 text-center">Loading your campaigns...</p>
+                </div>
+            </div>
 
-<div class="toast" id="toast"></div>
+            <!-- Verification View -->
+            <div id="view-verification" class="page-view hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Verify Task Completions</h2>
+                <div id="verification-list" class="space-y-4 scrollbar-custom max-h-96 overflow-y-auto pr-2">
+                    <!-- Tasks to verify will be dynamically added here -->
+                    <p class="text-gray-400 text-center">No tasks to verify.</p>
+                </div>
+            </div>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+            <!-- Account View -->
+            <div id="view-account" class="page-view hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Account Management</h2>
+                <div id="auth-forms-section">
+                    <div id="auth-message-text" class="text-center text-lg font-semibold mb-4"></div>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <button id="show-login-btn" class="px-6 py-3 rounded-xl gradient-bg text-white font-bold transition-all hover:scale-105">Login</button>
+                        <button id="show-signup-btn" class="px-6 py-3 rounded-xl bg-gray-600 text-white font-bold transition-all hover:scale-105">Sign Up</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form id="login-form" class="space-y-4 max-w-sm mx-auto">
+                        <div>
+                            <label for="login-email" class="block text-gray-300">Email</label>
+                            <input type="email" id="login-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-gray-300">Password</label>
+                            <input type="password" id="login-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Login</button>
+                    </form>
 
-<script>
-// === Firebase Config ===
-const firebaseConfig = {
-apiKey: "AIzaSyBpcZP_iI7jrfMoOZ_o5lVMylJroyXngo",
-authDomain: "fir-b136e.firebaseapp.com",
-projectId: "fir-b136e",
-storageBucket: "fir-b136e.appspot.com",
-messagingSenderId: "955519644624",
-appId: "1:955519644624:web:9c7bc8fe6271e72cbaffd5",
-measurementId: "G-Z716CNT2MQ"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+                    <!-- Sign Up Form -->
+                    <form id="signup-form" class="space-y-4 max-w-sm mx-auto hidden">
+                        <div>
+                            <label for="signup-email" class="block text-gray-300">Email</label>
+                            <input type="email" id="signup-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-gray-300">Password</label>
+                            <input type="password" id="signup-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Sign Up</button>
+                    </form>
+                </div>
+                
+                <div id="profile-section" class="hidden">
+                    <div class="dashboard-card p-6 max-w-md mx-auto space-y-4">
+                         <div class="flex flex-col sm:flex-row justify-between items-center pb-4 border-b border-gray-700">
+                             <h3 class="text-xl font-semibold">Your Profile</h3>
+                             <button id="logout-btn" class="px-4 py-2 mt-2 sm:mt-0 text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Logout</button>
+                         </div>
+                         <p class="text-gray-400">Email: <span id="profile-email-display" class="font-bold text-white"></span></p>
+                         <form id="update-details-form" class="space-y-4">
+                            <h4 class="text-lg font-semibold mt-4">Update Details</h4>
+                            <div>
+                                <label for="update-email" class="block text-gray-300">New Email</label>
+                                <input type="email" id="update-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label for="update-password" class="block text-gray-300">New Password (min 6 characters)</label>
+                                <input type="password" id="update-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Update</button>
+                            <p id="update-message" class="text-center text-sm"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-// === Tabs ===
-function openTab(evt, tabName){
-let tabcontent = document.getElementsByClassName("tabcontent");
-for(let i=0;i<tabcontent.length;i++){tabcontent[i].style.display="none";}
-let tablinks = document.getElementsByClassName("tablinks");
-for(let i=0;i<tablinks.length;i++){tablinks[i].className = tablinks[i].className.replace(" active","");}
-document.getElementById(tabName).style.display="block";
-evt.currentTarget.className+=" active";
-}
+    <!-- Modal for messages (replaces alert() and prompt()) -->
+    <div id="message-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-purple-500 max-w-sm w-full text-center">
+            <p id="modal-text" class="text-white text-lg font-semibold mb-4"></p>
+            <input type="text" id="modal-input" class="w-full p-3 rounded-md dashboard-card text-white hidden" placeholder="Enter proof here...">
+            <button id="modal-close-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">OK</button>
+            <button id="modal-submit-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors hidden">Submit</button>
+        </div>
+    </div>
 
-// === Toast ===
-function showToast(msg){
-const toast = document.getElementById("toast");
-toast.innerText = msg;
-toast.style.display = "block";
-setTimeout(()=>{toast.style.display="none";},3000);
-}
+    <!-- The script for Firebase and app logic -->
+    <script type="module">
+        // Provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-// === Guest Mode ===
-function guestMode(){
-loadCampaigns();
-document.getElementById("profile").style.display="none";
-document.getElementById("taskSelector").style.display="none";
-showToast("Guest mode: login to earn points.");
-}
+        // Firebase SDK imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getFirestore, doc, collection, onSnapshot, query, where, addDoc, updateDoc, getDocs, getDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-// === Sign Up / Login Functions (Email + Google + FB placeholders) ===
-function signUpUser(){ /* Email signup logic */ }
-function signUpWithGoogle(){ loginWithGoogle(); }
-function signUpWithFacebook(){ showToast("FB integration pending"); }
+        // Set Firebase log level to debug
+        setLogLevel('debug');
 
-function loginUser(){ /* Email login logic */ }
-function loginWithGoogle(){ /* Google OAuth + YouTube verification */ }
-function loginWithFacebook(){ showToast("FB login pending"); }
+        // Initialize Firebase
+        let app;
+        let db;
+        let auth;
+        let userId = null;
+        let unsubscribeListeners = [];
 
-function logoutUser(){ auth.signOut().then(()=>{ location.reload(); }); }
+        // UI Elements
+        const mainApp = document.getElementById('main-app');
+        const userIdDisplay = document.getElementById('user-id-display');
+        const earnedPointsDisplay = document.getElementById('earned-points-display');
+        const pendingPointsDisplay = document.getElementById('pending-points-display');
+        const simulateTaskBtn = document.getElementById('simulate-task-btn');
+        const logoutBtn = document.getElementById('logout-btn');
 
-// === Load User, Campaigns, Task Completion Functions ===
-function loadUser(){ /* fetch user data & points */ }
-function loadCampaigns(){ /* fetch campaigns & render cards */ }
-function completeTask(campId,points,type,target){ /* verify YouTube / add points */ }
+        // Views and Navigation
+        const navButtons = document.querySelectorAll('.nav-link');
+        const views = document.querySelectorAll('.page-view');
+        const tasksList = document.getElementById('tasks-list');
+        const myCampaignsList = document.getElementById('my-campaigns-list');
+        const verificationList = document.getElementById('verification-list');
+        const createCampaignForm = document.getElementById('create-campaign-form');
+        const campaignSummary = document.getElementById('campaign-summary');
+        const adsContainer = document.getElementById('ads-container');
 
-loadUser();
-</script>
+        // Account View Elements
+        const authFormsSection = document.getElementById('auth-forms-section');
+        const profileSection = document.getElementById('profile-section');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showLoginBtn = document.getElementById('show-login-btn');
+        const showSignupBtn = document.getElementById('show-signup-btn');
+        const authMessageText = document.getElementById('auth-message-text');
+        const profileEmailDisplay = document.getElementById('profile-email-display');
+        const updateDetailsForm = document.getElementById('update-details-form');
+        const updateMessage = document.getElementById('update-message');
+
+        // Message Modal Elements
+        const messageModal = document.getElementById('message-modal');
+        const modalText = document.getElementById('modal-text');
+        const modalInput = document.getElementById('modal-input');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalSubmitBtn = document.getElementById('modal-submit-btn');
+        let modalCallback = null;
+
+        // Hardcoded ad links
+        const ads = [
+            { url: "https://otieu.com/4/9677163", points: 1000 },
+            { url: "https://otieu.com/4/9677167", points: 1000 }
+        ];
+
+        // Show a custom modal message
+        function showMessage(message, inputNeeded = false, callback = null) {
+            modalText.textContent = message;
+            if (inputNeeded) {
+                modalInput.classList.remove('hidden');
+                modalSubmitBtn.classList.remove('hidden');
+                modalCloseBtn.classList.add('hidden');
+                modalCallback = callback;
+                modalInput.focus();
+            } else {
+                modalInput.classList.add('hidden');
+                modalSubmitBtn.classList.add('hidden');
+                modalCloseBtn.classList.remove('hidden');
+                modalCallback = null;
+            }
+            messageModal.classList.remove('hidden');
+        }
+
+        modalCloseBtn.addEventListener('click', () => {
+            messageModal.classList.add('hidden');
+        });
+        
+        modalSubmitBtn.addEventListener('click', () => {
+            const inputValue = modalInput.value;
+            messageModal.classList.add('hidden');
+            if (modalCallback) {
+                modalCallback(inputValue);
+            }
+            modalInput.value = ''; // Reset input
+        });
+
+        // Function to switch between views
+        function showView(viewId) {
+            views.forEach(view => view.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`nav-${viewId.replace('view-', '')}`).classList.add('active');
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const viewId = button.id.replace('nav-', 'view-');
+                showView(viewId);
+            });
+        });
+
+        // Event listeners for auth forms
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            showLoginBtn.classList.add('gradient-bg', 'text-white');
+            showLoginBtn.classList.remove('bg-gray-600');
+            showSignupBtn.classList.add('bg-gray-600');
+            showSignupBtn.classList.remove('gradient-bg', 'text-white');
+        });
+        
+        showSignupBtn.addEventListener('click', () => {
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            showSignupBtn.classList.add('gradient-bg', 'text-white');
+            showSignupBtn.classList.remove('bg-gray-600');
+            showLoginBtn.classList.add('bg-gray-600');
+            showLoginBtn.classList.remove('gradient-bg', 'text-white');
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage("Logged in successfully!");
+            } catch (error) {
+                console.error("Login Error:", error);
+                showMessage(`Login failed: ${error.message}`);
+            }
+        });
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                showMessage("Account created and logged in successfully!");
+            } catch (error) {
+                console.error("Sign up Error:", error);
+                showMessage(`Sign up failed: ${error.message}`);
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showMessage("Logged out successfully.");
+            } catch (error) {
+                console.error("Logout Error:", error);
+                showMessage(`Logout failed: ${error.message}`);
+            }
+        });
+
+        updateDetailsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newEmail = document.getElementById('update-email').value;
+            const newPassword = document.getElementById('update-password').value;
+            const user = auth.currentUser;
+            let message = '';
+            let isUpdateSuccessful = false;
+
+            try {
+                if (newEmail && user.email !== newEmail) {
+                    await updateEmail(user, newEmail);
+                    message += 'Email updated successfully. ';
+                    isUpdateSuccessful = true;
+                }
+                
+                if (newPassword) {
+                    if (newPassword.length < 6) {
+                        message += 'Password must be at least 6 characters long. ';
+                        isUpdateSuccessful = false; // Prevents success message if password update fails
+                    } else {
+                        await updatePassword(user, newPassword);
+                        message += 'Password updated successfully. ';
+                        isUpdateSuccessful = true;
+                    }
+                }
+                
+                if (isUpdateSuccessful) {
+                    updateMessage.textContent = message.trim();
+                    updateMessage.classList.remove('text-red-500');
+                    updateMessage.classList.add('text-green-500');
+                } else if (!message) {
+                    updateMessage.textContent = 'No changes to update.';
+                    updateMessage.classList.remove('text-green-500');
+                    updateMessage.classList.add('text-yellow-500');
+                } else {
+                    updateMessage.textContent = message.trim();
+                    updateMessage.classList.remove('text-green-500');
+                    updateMessage.classList.add('text-red-500');
+                }
+            } catch (error) {
+                console.error("Update details error:", error);
+                updateMessage.textContent = `Update failed: ${error.message}`;
+                updateMessage.classList.remove('text-green-500');
+                updateMessage.classList.add('text-red-500');
+            }
+        });
+
+        // Initialize Firebase app and auth state listener
+        window.onload = async () => {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userIdDisplay.textContent = `User ID: ${userId.substring(0, 8)}...`;
+                        authFormsSection.classList.add('hidden');
+                        profileSection.classList.remove('hidden');
+                        profileEmailDisplay.textContent = user.email;
+                        startRealtimeListeners();
+                    } else {
+                        userId = null;
+                        userIdDisplay.textContent = `User ID: Guest`;
+                        authFormsSection.classList.remove('hidden');
+                        profileSection.classList.add('hidden');
+                        // Unsubscribe old listeners
+                        unsubscribeListeners.forEach(unsubscribe => unsubscribe());
+                        unsubscribeListeners = [];
+                        // Clear the UI data for guests
+                        earnedPointsDisplay.textContent = '0';
+                        pendingPointsDisplay.textContent = '0';
+                        document.getElementById('dashboard-earned-points').textContent = '0';
+                        document.getElementById('dashboard-pending-points').textContent = '0';
+                        document.getElementById('dashboard-active-campaigns').textContent = '0';
+                        myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to view your campaigns.</p>`;
+                        verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to verify tasks.</p>`;
+                    }
+                    renderAds();
+                });
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                showMessage("Failed to initialize Firebase. Please check the console.");
+            }
+        };
+
+        // Start listening to Firestore collections once authenticated
+        function startRealtimeListeners() {
+            if (!db || !userId) {
+                return;
+            }
+
+            // --- User Points Listener ---
+            const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+            const unsubscribePoints = onSnapshot(userDocRef, (doc) => {
+                if (doc.exists()) {
+                    const data = doc.data();
+                    const earned = data.pointsEarned || 0;
+                    const pending = data.pointsPending || 0;
+                    earnedPointsDisplay.textContent = earned.toLocaleString();
+                    pendingPointsDisplay.textContent = pending.toLocaleString();
+                    document.getElementById('dashboard-earned-points').textContent = earned.toLocaleString();
+                    document.getElementById('dashboard-pending-points').textContent = pending.toLocaleString();
+                } else {
+                    console.log("User document not found, creating a new one.");
+                    setDoc(userDocRef, {
+                        pointsEarned: 0,
+                        pointsPending: 0
+                    }).catch(console.error);
+                }
+            });
+            unsubscribeListeners.push(unsubscribePoints);
+
+
+            // --- Tasks Listener ---
+            const tasksQuery = query(collection(db, 'artifacts', appId, 'public', 'data', 'tasks'), where('status', '==', 'available'));
+            const unsubscribeTasks = onSnapshot(tasksQuery, async (snapshot) => {
+                tasksList.innerHTML = '';
+                if (snapshot.empty) {
+                    tasksList.innerHTML = `<p class="text-gray-400 text-center py-4">No tasks available right now. Check back later!</p>`;
+                } else {
+                    snapshot.forEach(async (taskDoc) => {
+                        const task = taskDoc.data();
+                        const campaignDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'campaigns', task.campaignId);
+                        const campaignSnap = await getDoc(campaignDocRef);
+                        if (!campaignSnap.exists()) return;
+                        const campaign = campaignSnap.data();
+                        
+                        // Check if the current user owns this campaign
+                        if (campaign.ownerId === userId) {
+                            return; // Do not show own tasks
+                        }
+
+                        const iconClass = getSocialIcon(campaign.socialMediaPlatform);
+                        const buttonText = campaign.socialMediaPlatform === 'website-traffic' ? 'Go to Website' : 'Complete Task';
+                        const taskItem = document.createElement('div');
+                        taskItem.className = 'dashboard-card p-4 flex items-center justify-between';
+                        taskItem.innerHTML = `
+                            <div class="flex items-center space-x-4">
+                                <i class="${iconClass} text-xl w-8 text-center"></i>
+                                <div>
+                                    <p class="font-bold text-white">Earn ${campaign.pointsPerTask} Points</p>
+                                    <p class="text-sm text-gray-400">Complete task on ${campaign.socialMediaPlatform}</p>
+                                    <p class="text-xs text-gray-500">Campaign ID: ${campaign.campaignId.substring(0, 8)}...</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a href="${campaign.targetUrl}" target="_blank" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors">${buttonText}</a>
+                                <button data-task-id="${taskDoc.id}" data-campaign-id="${campaign.campaignId}" class="complete-task-btn px-4 py-2 text-white gradient-bg rounded-lg hover:opacity-80 transition-colors">Submit Proof</button>
+                            </div>
+                        `;
+                        tasksList.appendChild(taskItem);
+                    });
+                }
+            });
+            unsubscribeListeners.push(unsubscribeTasks);
+
+
+            // --- My Campaigns Listener ---
+            const myCampaignsQuery = query(collection(db, 'artifacts', appId, 'public', 'data', 'campaigns'), where('ownerId', '==', userId));
+            const unsubscribeMyCampaigns = onSnapshot(myCampaignsQuery, async (snapshot) => {
+                myCampaignsList.innerHTML = '';
+                let activeCampaignsCount = 0;
+                if (snapshot.empty) {
+                    myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You have not created any campaigns yet.</p>`;
+                } else {
+                    for (const campaignDoc of snapshot.docs) {
+                        const campaign = campaignDoc.data();
+                        const iconClass = getSocialIcon(campaign.socialMediaPlatform);
+                        const tasksSnapshot = await getDocs(query(collection(db, 'artifacts', appId, 'public', 'data', 'tasks'), where('campaignId', '==', campaignDoc.id)));
+                        const totalTasks = tasksSnapshot.size;
+                        const completedTasks = tasksSnapshot.docs.filter(doc => doc.data().status === 'completed').length;
+                        const pendingTasks = tasksSnapshot.docs.filter(doc => doc.data().status === 'pending_review').length;
+                        
+                        const campaignItem = document.createElement('div');
+                        campaignItem.className = 'dashboard-card p-4 space-y-2';
+                        campaignItem.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <i class="${iconClass} text-2xl w-8 text-center"></i>
+                                    <div>
+                                        <p class="font-bold text-white">${campaign.socialMediaPlatform.toUpperCase()} Campaign</p>
+                                        <p class="text-sm text-gray-400 truncate w-40 sm:w-auto">${campaign.targetUrl}</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full gradient-bg">${completedTasks}/${totalTasks} tasks</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <span>Budget: ${campaign.totalPoints} points</span>
+                                <span>|</span>
+                                <span>Pending: ${pendingTasks} proofs</span>
+                            </div>
+                        `;
+                        myCampaignsList.appendChild(campaignItem);
+                        if (campaign.totalPoints > (completedTasks * campaign.pointsPerTask)) {
+                             activeCampaignsCount++;
+                        }
+                    }
+                }
+                 document.getElementById('dashboard-active-campaigns').textContent = activeCampaignsCount.toLocaleString();
+            });
+            unsubscribeListeners.push(unsubscribeMyCampaigns);
+
+
+            // --- Verification Listener (for tasks pending review) ---
+            const proofsQuery = query(collection(db, 'artifacts', appId, 'public', 'data', 'proofs'), where('status', '==', 'pending'));
+            const unsubscribeProofs = onSnapshot(proofsQuery, async (snapshot) => {
+                verificationList.innerHTML = '';
+                if (snapshot.empty) {
+                    verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">No tasks to verify.</p>`;
+                    return;
+                }
+
+                for (const proofDoc of snapshot.docs) {
+                    const proof = proofDoc.data();
+                    const campaignDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'campaigns', proof.campaignId);
+                    const campaignSnap = await getDoc(campaignDocRef);
+                    if (!campaignSnap.exists()) continue;
+                    const campaign = campaignSnap.data();
+                    
+                    if (campaign.ownerId === userId) { // Only show proofs for this user's campaigns
+                        const proofItem = document.createElement('div');
+                        proofItem.className = 'dashboard-card p-4 flex items-center justify-between';
+                        proofItem.innerHTML = `
+                            <div>
+                                <p class="font-bold text-white">Proof from User: ${proof.submittedByUserId.substring(0, 8)}...</p>
+                                <p class="text-sm text-gray-400">for campaign: ${campaign.socialMediaPlatform.toUpperCase()}</p>
+                                <p class="text-xs text-gray-500">Submitted proof: ${proof.submittedProof}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button data-proof-id="${proofDoc.id}" class="approve-btn px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors">Approve</button>
+                                <button data-proof-id="${proofDoc.id}" class="reject-btn px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Reject</button>
+                            </div>
+                        `;
+                        verificationList.appendChild(proofItem);
+                    }
+                }
+                if(verificationList.innerHTML.trim() === '') {
+                     verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">No tasks to verify.</p>`;
+                }
+            });
+            unsubscribeListeners.push(unsubscribeProofs);
+        }
+
+        // Event listener for task completion buttons
+        document.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('complete-task-btn')) {
+                if (!userId) {
+                    showView('view-account');
+                    authMessageText.textContent = "You must be logged in to complete a task and submit proof.";
+                    return;
+                }
+                const taskId = e.target.dataset.taskId;
+                const campaignId = e.target.dataset.campaignId;
+                
+                showMessage("Please provide your username as proof of completion:", true, async (proof) => {
+                    if (!proof) {
+                        showMessage("Proof submission cancelled.");
+                        return;
+                    }
+                    try {
+                        const proofCollection = collection(db, 'artifacts', appId, 'public', 'data', 'proofs');
+                        await addDoc(proofCollection, {
+                            taskId: taskId,
+                            campaignId: campaignId,
+                            submittedByUserId: userId,
+                            submittedProof: proof,
+                            status: 'pending'
+                        });
+                        
+                        const taskDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tasks', taskId);
+                        await updateDoc(taskDocRef, {
+                             assignedToUserId: userId,
+                             status: 'pending_review'
+                        });
+                        
+                        showMessage("Proof submitted successfully! Your points are pending verification.");
+                    } catch (error) {
+                        console.error("Error submitting proof:", error);
+                        showMessage("Error submitting proof. Please try again.");
+                    }
+                });
+            }
+
+            if (e.target.classList.contains('approve-btn')) {
+                const proofId = e.target.dataset.proofId;
+                const proofDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'proofs', proofId);
+                
+                const proofSnap = await getDoc(proofDocRef);
+                if (!proofSnap.exists()) return;
+                const proofData = proofSnap.data();
+
+                const campaignDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'campaigns', proofData.campaignId);
+                const campaignSnap = await getDoc(campaignDocRef);
+                if (!campaignSnap.exists()) return;
+                const campaignData = campaignSnap.data();
+                
+                const userDocRef = doc(db, 'artifacts', appId, 'users', proofData.submittedByUserId);
+                const userSnap = await getDoc(userDocRef);
+                if(!userSnap.exists()) return;
+                const userData = userSnap.data();
+                
+                await updateDoc(proofDocRef, { status: 'approved' });
+
+                const taskDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tasks', proofData.taskId);
+                await updateDoc(taskDocRef, { status: 'completed' });
+
+                await updateDoc(userDocRef, {
+                    pointsEarned: increment(campaignData.pointsPerTask),
+                });
+                
+                showMessage("Proof approved and points awarded!");
+            }
+
+            if (e.target.classList.contains('reject-btn')) {
+                const proofId = e.target.dataset.proofId;
+                const proofDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'proofs', proofId);
+                await updateDoc(proofDocRef, { status: 'rejected' });
+                showMessage("Proof rejected.");
+            }
+        });
+        
+        // Watch ad functionality
+        function renderAds() {
+            adsContainer.innerHTML = '';
+            ads.forEach(ad => {
+                const adItem = document.createElement('div');
+                adItem.className = 'dashboard-card p-6 flex flex-col items-center space-y-4';
+                adItem.innerHTML = `
+                    <h3 class="text-xl font-bold text-white">Earn ${ad.points} Points</h3>
+                    <p class="text-sm text-gray-400">Watch a quick ad to get rewarded instantly.</p>
+                    <button data-url="${ad.url}" data-points="${ad.points}" class="watch-ad-btn w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Watch Ad</button>
+                    <div class="ad-progress w-full h-2 bg-gray-600 rounded-full overflow-hidden hidden">
+                        <div class="ad-bar h-full bg-green-500 transition-all duration-100 ease-linear" style="width: 0%;"></div>
+                    </div>
+                `;
+                adsContainer.appendChild(adItem);
+            });
+        }
+        
+        adsContainer.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('watch-ad-btn')) {
+                if (!userId) {
+                    showView('view-account');
+                    authMessageText.textContent = "You must be logged in to watch an ad and earn points.";
+                    return;
+                }
+                
+                const url = e.target.dataset.url;
+                const points = parseInt(e.target.dataset.points);
+                const adButton = e.target;
+                const adProgress = adButton.nextElementSibling;
+                const adBar = adProgress.querySelector('.ad-bar');
+
+                adButton.disabled = true;
+                adButton.textContent = "Loading Ad...";
+                adProgress.classList.remove('hidden');
+
+                window.open(url, '_blank');
+                
+                let progress = 0;
+                const adDuration = 5000; // 5 seconds
+                const interval = 100;
+                
+                const progressInterval = setInterval(async () => {
+                    progress += (interval / adDuration) * 100;
+                    adBar.style.width = `${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        adBar.style.width = '100%';
+                        adButton.textContent = "Ad Completed!";
+                        
+                        try {
+                            const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+                            const userSnap = await getDoc(userDocRef);
+                            
+                            if (!userSnap.exists()) {
+                                await setDoc(userDocRef, {
+                                    pointsEarned: points,
+                                    pointsPending: 0
+                                });
+                            } else {
+                                await updateDoc(userDocRef, {
+                                    pointsEarned: increment(points)
+                                });
+                            }
+
+                            showMessage(`You have earned ${points} points!`);
+                        } catch (error) {
+                            console.error("Error awarding points:", error);
+                            showMessage("Error awarding points. Please try again.");
+                        } finally {
+                            adButton.disabled = false;
+                            adProgress.classList.add('hidden');
+                            adBar.style.width = '0%';
+                            adButton.textContent = "Watch Ad";
+                        }
+                    }
+                }, interval);
+            }
+        });
+
+        // Event listener for campaign creation form
+        createCampaignForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!userId) {
+                showView('view-account');
+                authMessageText.textContent = "You must be logged in to create a campaign.";
+                return;
+            }
+
+            const platform = document.getElementById('platform').value;
+            const url = document.getElementById('url').value;
+            const pointsPerTask = parseInt(document.getElementById('points-per-task').value);
+            const totalBudget = parseInt(document.getElementById('total-budget').value);
+
+            if (totalBudget < pointsPerTask) {
+                showMessage("Total budget must be greater than or equal to points per task.");
+                return;
+            }
+
+            const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+            const userSnap = await getDoc(userDocRef);
+            if(!userSnap.exists()) return;
+            const userData = userSnap.data();
+
+            if (userData.pointsEarned < totalBudget) {
+                showMessage("You do not have enough earned points to create this campaign.");
+                return;
+            }
+            
+            try {
+                // Deduct points from earned
+                await updateDoc(userDocRef, {
+                    pointsEarned: increment(-totalBudget),
+                });
+                
+                const campaignRef = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'campaigns'), {
+                    ownerId: userId,
+                    socialMediaPlatform: platform,
+                    targetUrl: url,
+                    totalPoints: totalBudget,
+                    pointsPerTask: pointsPerTask,
+                    tasksCompleted: 0
+                });
+                
+                // Create individual tasks
+                const numTasks = Math.floor(totalBudget / pointsPerTask);
+                for(let i = 0; i < numTasks; i++) {
+                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tasks'), {
+                        campaignId: campaignRef.id,
+                        status: 'available',
+                        assignedToUserId: null
+                    });
+                }
+                
+                showMessage("Campaign created successfully!");
+                createCampaignForm.reset();
+                showView('view-my-campaigns');
+            } catch (error) {
+                console.error("Error creating campaign:", error);
+                showMessage("Failed to create campaign. Please try again.");
+            }
+        });
+        
+        // Dynamic summary for campaign creation
+        document.getElementById('total-budget').addEventListener('input', updateCampaignSummary);
+        document.getElementById('points-per-task').addEventListener('input', updateCampaignSummary);
+
+        function updateCampaignSummary() {
+            const pointsPerTask = parseInt(document.getElementById('points-per-task').value) || 0;
+            const totalBudget = parseInt(document.getElementById('total-budget').value) || 0;
+            
+            if (pointsPerTask > 0 && totalBudget > 0) {
+                const completions = Math.floor(totalBudget / pointsPerTask);
+                campaignSummary.innerHTML = `
+                    <p>This campaign will generate approximately <span class="font-bold text-white">${completions}</span> completions.</p>
+                `;
+            } else {
+                campaignSummary.innerHTML = "Enter budget and points to see summary.";
+            }
+        }
+
+        // Helper function for icons
+        function getSocialIcon(platform) {
+            switch (platform) {
+                case 'youtube': return 'fab fa-youtube text-red-500';
+                case 'facebook': return 'fab fa-facebook-f text-blue-500';
+                case 'tiktok': return 'fab fa-tiktok text-white';
+                case 'instagram': return 'fab fa-instagram text-pink-500';
+                case 'twitter': return 'fab fa-twitter text-blue-400';
+                case 'website-traffic': return 'fas fa-globe text-green-500';
+                default: return 'fa-solid fa-link text-gray-400';
+            }
+        }
+        
+        // Simulates another user creating a campaign
+        simulateTaskBtn.addEventListener('click', async () => {
+             const simulatedUserId = `simulated_user_${Math.random().toString(36).substring(2, 15)}`;
+             const simulatedPlatform = 'youtube';
+             const simulatedUrl = `https://www.youtube.com/watch?v=mock_video_${Math.floor(Math.random() * 1000)}`;
+             const simulatedPoints = 50;
+
+             try {
+                 const campaignRef = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'campaigns'), {
+                     ownerId: simulatedUserId,
+                     socialMediaPlatform: simulatedPlatform,
+                     targetUrl: simulatedUrl,
+                     totalPoints: 50,
+                     pointsPerTask: simulatedPoints,
+                     tasksCompleted: 0
+                 });
+                 
+                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tasks'), {
+                     campaignId: campaignRef.id,
+                     status: 'available',
+                     assignedToUserId: null
+                 });
+                 showMessage("A new task from another user has been simulated!");
+             } catch (error) {
+                 console.error("Error simulating task:", error);
+                 showMessage("Failed to simulate task. Please check the console.");
+             }
+         });
+    </script>
 </body>
 </html>
