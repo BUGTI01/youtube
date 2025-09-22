@@ -179,74 +179,44 @@
             <!-- Account View -->
             <div id="view-account" class="page-view hidden">
                 <h2 class="text-2xl font-semibold mb-4 text-white">Account Management</h2>
-                <div id="auth-forms-section">
-                    <div id="auth-message-text" class="text-center text-lg font-semibold mb-4"></div>
-                    <div class="flex justify-center space-x-4 mb-4">
-                        <button id="show-login-btn" class="px-6 py-3 rounded-xl gradient-bg text-white font-bold transition-all hover:scale-105">Login</button>
-                        <button id="show-signup-btn" class="px-6 py-3 rounded-xl bg-gray-600 text-white font-bold transition-all hover:scale-105">Sign Up</button>
-                    </div>
-                    
-                    <!-- Login Form -->
-                    <form id="login-form" class="space-y-4 max-w-sm mx-auto">
-                        <div>
-                            <label for="login-email" class="block text-gray-300">Email</label>
-                            <input type="email" id="login-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                        </div>
-                        <div>
-                            <label for="login-password" class="block text-gray-300">Password</label>
-                            <input type="password" id="login-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                        </div>
-                        <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Login</button>
-                    </form>
-
-                    <!-- Sign Up Form -->
-                    <form id="signup-form" class="space-y-4 max-w-sm mx-auto hidden">
-                        <div>
-                            <label for="signup-email" class="block text-gray-300">Email</label>
-                            <input type="email" id="signup-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                        </div>
-                        <div>
-                            <label for="signup-password" class="block text-gray-300">Password</label>
-                            <input type="password" id="signup-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                        </div>
-                        <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Sign Up</button>
-                    </form>
-                </div>
-                
-                <div id="profile-section" class="hidden">
-                    <div class="dashboard-card p-6 max-w-md mx-auto space-y-4">
-                         <div class="flex flex-col sm:flex-row justify-between items-center pb-4 border-b border-gray-700">
-                             <h3 class="text-xl font-semibold">Your Profile</h3>
-                             <button id="logout-btn" class="px-4 py-2 mt-2 sm:mt-0 text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Logout</button>
+                <div id="profile-section" class="dashboard-card p-6 max-w-md mx-auto space-y-4">
+                     <div class="flex flex-col sm:flex-row justify-between items-center pb-4 border-b border-gray-700">
+                         <h3 class="text-xl font-semibold">Your Profile</h3>
+                         <button id="logout-btn" class="px-4 py-2 mt-2 sm:mt-0 text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Logout</button>
+                     </div>
+                     <p class="text-gray-400">User ID: <span id="profile-id-display" class="font-bold text-white"></span></p>
+                     
+                     <!-- New Referral Section -->
+                     <div id="referral-section" class="pt-4 border-t border-gray-700 space-y-2">
+                         <h4 class="text-lg font-semibold">Your Referral Code</h4>
+                         <p class="text-gray-400">Share this code with friends to earn bonus points!</p>
+                         <div class="flex items-center space-x-2 bg-gray-700 p-3 rounded-lg">
+                             <span id="referral-code-display" class="font-bold text-white text-lg"></span>
+                             <button id="copy-code-btn" class="text-gray-400 hover:text-white transition-colors">
+                                 <i class="fa-solid fa-clipboard"></i>
+                             </button>
                          </div>
-                         <p class="text-gray-400">Email: <span id="profile-email-display" class="font-bold text-white"></span></p>
-                         <form id="update-details-form" class="space-y-4">
-                            <h4 class="text-lg font-semibold mt-4">Update Details</h4>
-                            <div>
-                                <label for="update-email" class="block text-gray-300">New Email</label>
-                                <input type="email" id="update-email" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            </div>
-                            <div>
-                                <label for="update-password" class="block text-gray-300">New Password (min 6 characters)</label>
-                                <input type="password" id="update-password" class="w-full p-3 rounded-md dashboard-card text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            </div>
-                            <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl transition-all hover:scale-105">Update</button>
-                            <p id="update-message" class="text-center text-sm"></p>
-                        </form>
-                    </div>
+                         <p class="text-gray-400">Or use this link:</p>
+                         <div class="flex items-center space-x-2 bg-gray-700 p-3 rounded-lg">
+                             <span id="referral-link-display" class="font-bold text-white text-sm truncate"></span>
+                             <button id="copy-link-btn" class="text-gray-400 hover:text-white transition-colors">
+                                 <i class="fa-solid fa-clipboard"></i>
+                             </button>
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Modal for messages (replaces alert() and prompt()) -->
+            <div id="message-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-purple-500 max-w-sm w-full text-center">
+                    <p id="modal-text" class="text-white text-lg font-semibold mb-4"></p>
+                    <input type="text" id="modal-input" class="w-full p-3 rounded-md dashboard-card text-white hidden" placeholder="Enter proof here...">
+                    <button id="modal-close-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">OK</button>
+                    <button id="modal-submit-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors hidden">Submit</button>
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- Modal for messages (replaces alert() and prompt()) -->
-    <div id="message-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-purple-500 max-w-sm w-full text-center">
-            <p id="modal-text" class="text-white text-lg font-semibold mb-4"></p>
-            <input type="text" id="modal-input" class="w-full p-3 rounded-md dashboard-card text-white hidden" placeholder="Enter proof here...">
-            <button id="modal-close-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">OK</button>
-            <button id="modal-submit-btn" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors hidden">Submit</button>
-        </div>
     </div>
 
     <!-- The script for Firebase and app logic -->
@@ -258,19 +228,17 @@
 
         // Firebase SDK imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, collection, onSnapshot, query, where, addDoc, updateDoc, getDocs, getDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
         // Set Firebase log level to debug
         setLogLevel('debug');
 
-        // Initialize Firebase
-        let app;
-        let db;
-        let auth;
-        let userId = null;
-        let unsubscribeListeners = [];
+        // Initialize Firebase services outside of any function to ensure they're always available
+        const app = firebaseConfig ? initializeApp(firebaseConfig) : null;
+        const auth = app ? getAuth(app) : null;
+        const db = app ? getFirestore(app) : null;
 
         // UI Elements
         const mainApp = document.getElementById('main-app');
@@ -291,17 +259,15 @@
         const adsContainer = document.getElementById('ads-container');
 
         // Account View Elements
-        const authFormsSection = document.getElementById('auth-forms-section');
         const profileSection = document.getElementById('profile-section');
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-        const showLoginBtn = document.getElementById('show-login-btn');
-        const showSignupBtn = document.getElementById('show-signup-btn');
-        const authMessageText = document.getElementById('auth-message-text');
-        const profileEmailDisplay = document.getElementById('profile-email-display');
-        const updateDetailsForm = document.getElementById('update-details-form');
-        const updateMessage = document.getElementById('update-message');
+        const profileIdDisplay = document.getElementById('profile-id-display');
 
+        // Referral System Elements
+        const referralCodeDisplay = document.getElementById('referral-code-display');
+        const referralLinkDisplay = document.getElementById('referral-link-display');
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        
         // Message Modal Elements
         const messageModal = document.getElementById('message-modal');
         const modalText = document.getElementById('modal-text');
@@ -315,6 +281,10 @@
             { url: "https://otieu.com/4/9677163", points: 1000 },
             { url: "https://otieu.com/4/9677167", points: 1000 }
         ];
+        
+        // Referral bonuses
+        const REFERRER_BONUS = 500; // Increased to 500 points
+        const NEW_USER_BONUS = 50;
 
         // Show a custom modal message
         function showMessage(message, inputNeeded = false, callback = null) {
@@ -362,51 +332,6 @@
             });
         });
 
-        // Event listeners for auth forms
-        showLoginBtn.addEventListener('click', () => {
-            loginForm.classList.remove('hidden');
-            signupForm.classList.add('hidden');
-            showLoginBtn.classList.add('gradient-bg', 'text-white');
-            showLoginBtn.classList.remove('bg-gray-600');
-            showSignupBtn.classList.add('bg-gray-600');
-            showSignupBtn.classList.remove('gradient-bg', 'text-white');
-        });
-        
-        showSignupBtn.addEventListener('click', () => {
-            signupForm.classList.remove('hidden');
-            loginForm.classList.add('hidden');
-            showSignupBtn.classList.add('gradient-bg', 'text-white');
-            showSignupBtn.classList.remove('bg-gray-600');
-            showLoginBtn.classList.add('bg-gray-600');
-            showLoginBtn.classList.remove('gradient-bg', 'text-white');
-        });
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                showMessage("Logged in successfully!");
-            } catch (error) {
-                console.error("Login Error:", error);
-                showMessage(`Login failed: ${error.message}`);
-            }
-        });
-
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                showMessage("Account created and logged in successfully!");
-            } catch (error) {
-                console.error("Sign up Error:", error);
-                showMessage(`Sign up failed: ${error.message}`);
-            }
-        });
-
         logoutBtn.addEventListener('click', async () => {
             try {
                 await signOut(auth);
@@ -417,102 +342,86 @@
             }
         });
 
-        updateDetailsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const newEmail = document.getElementById('update-email').value;
-            const newPassword = document.getElementById('update-password').value;
-            const user = auth.currentUser;
-            let message = '';
-            let isUpdateSuccessful = false;
-
-            try {
-                if (newEmail && user.email !== newEmail) {
-                    await updateEmail(user, newEmail);
-                    message += 'Email updated successfully. ';
-                    isUpdateSuccessful = true;
-                }
-                
-                if (newPassword) {
-                    if (newPassword.length < 6) {
-                        message += 'Password must be at least 6 characters long. ';
-                        isUpdateSuccessful = false; // Prevents success message if password update fails
-                    } else {
-                        await updatePassword(user, newPassword);
-                        message += 'Password updated successfully. ';
-                        isUpdateSuccessful = true;
-                    }
-                }
-                
-                if (isUpdateSuccessful) {
-                    updateMessage.textContent = message.trim();
-                    updateMessage.classList.remove('text-red-500');
-                    updateMessage.classList.add('text-green-500');
-                } else if (!message) {
-                    updateMessage.textContent = 'No changes to update.';
-                    updateMessage.classList.remove('text-green-500');
-                    updateMessage.classList.add('text-yellow-500');
-                } else {
-                    updateMessage.textContent = message.trim();
-                    updateMessage.classList.remove('text-green-500');
-                    updateMessage.classList.add('text-red-500');
-                }
-            } catch (error) {
-                console.error("Update details error:", error);
-                updateMessage.textContent = `Update failed: ${error.message}`;
-                updateMessage.classList.remove('text-green-500');
-                updateMessage.classList.add('text-red-500');
+        // Function to generate a random 6-8 character alphanumeric referral code
+        function generateReferralCode() {
+            const length = Math.floor(Math.random() * 3) + 6; // 6 to 8 characters
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
+            return result;
+        }
+
+        // Copy referral code to clipboard
+        copyCodeBtn.addEventListener('click', () => {
+            const code = referralCodeDisplay.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showMessage('Referral code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                showMessage('Failed to copy. Please try again.');
+            });
         });
 
-        // Initialize Firebase app and auth state listener
+        // Copy referral link to clipboard
+        copyLinkBtn.addEventListener('click', () => {
+            const link = referralLinkDisplay.textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showMessage('Referral link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                showMessage('Failed to copy. Please try again.');
+            });
+        });
+
+        let userId = null;
+        let unsubscribeListeners = [];
+
+        // Initial setup on page load
         window.onload = async () => {
             if (!firebaseConfig) {
                 console.error("Firebase config is missing or invalid. App cannot function.");
                 return;
             }
-
+            
             try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
-
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.textContent = `User ID: ${userId.substring(0, 8)}...`;
-                        authFormsSection.classList.add('hidden');
-                        profileSection.classList.remove('hidden');
-                        profileEmailDisplay.textContent = user.email;
-                        startRealtimeListeners();
-                    } else {
-                        userId = null;
-                        userIdDisplay.textContent = `User ID: Guest`;
-                        authFormsSection.classList.remove('hidden');
-                        profileSection.classList.add('hidden');
-                        // Unsubscribe old listeners
-                        unsubscribeListeners.forEach(unsubscribe => unsubscribe());
-                        unsubscribeListeners = [];
-                        // Clear the UI data for guests
-                        earnedPointsDisplay.textContent = '0';
-                        pendingPointsDisplay.textContent = '0';
-                        document.getElementById('dashboard-earned-points').textContent = '0';
-                        document.getElementById('dashboard-pending-points').textContent = '0';
-                        document.getElementById('dashboard-active-campaigns').textContent = '0';
-                        myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to view your campaigns.</p>`;
-                        verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to verify tasks.</p>`;
-                    }
-                    renderAds();
-                });
             } catch (error) {
-                console.error("Firebase Initialization Error:", error);
-                showMessage("Failed to initialize Firebase. Please check the console.");
+                console.error("Firebase Auth Error:", error);
+                showMessage("Failed to authenticate with Firebase. Please check the console.");
             }
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    userIdDisplay.textContent = `User ID: ${userId.substring(0, 8)}...`;
+                    profileIdDisplay.textContent = userId;
+                    profileSection.classList.remove('hidden');
+                    
+                    startRealtimeListeners();
+                } else {
+                    userId = null;
+                    userIdDisplay.textContent = `User ID: Guest`;
+                    profileSection.classList.add('hidden');
+                    // Unsubscribe old listeners
+                    unsubscribeListeners.forEach(unsubscribe => unsubscribe());
+                    unsubscribeListeners = [];
+                    // Clear the UI data for guests
+                    earnedPointsDisplay.textContent = '0';
+                    pendingPointsDisplay.textContent = '0';
+                    document.getElementById('dashboard-earned-points').textContent = '0';
+                    document.getElementById('dashboard-pending-points').textContent = '0';
+                    document.getElementById('dashboard-active-campaigns').textContent = '0';
+                    myCampaignsList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to view your campaigns.</p>`;
+                    verificationList.innerHTML = `<p class="text-gray-400 text-center py-4">You must be logged in to verify tasks.</p>`;
+                }
+                renderAds();
+            });
         };
 
         // Start listening to Firestore collections once authenticated
@@ -521,7 +430,7 @@
                 return;
             }
 
-            // --- User Points Listener ---
+            // --- User Points and Referral Listener ---
             const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
             const unsubscribePoints = onSnapshot(userDocRef, (doc) => {
                 if (doc.exists()) {
@@ -532,11 +441,21 @@
                     pendingPointsDisplay.textContent = pending.toLocaleString();
                     document.getElementById('dashboard-earned-points').textContent = earned.toLocaleString();
                     document.getElementById('dashboard-pending-points').textContent = pending.toLocaleString();
+                    
+                    // Update referral UI
+                    const referralCode = data.referralCode || '';
+                    if (referralCode) {
+                        referralCodeDisplay.textContent = referralCode;
+                        referralLinkDisplay.textContent = `${window.location.origin}${window.location.pathname}?ref=${referralCode}`;
+                    }
                 } else {
                     console.log("User document not found, creating a new one.");
                     setDoc(userDocRef, {
                         pointsEarned: 0,
-                        pointsPending: 0
+                        pointsPending: 0,
+                        referralCode: generateReferralCode(),
+                        referredBy: null,
+                        createdAt: new Date(),
                     }).catch(console.error);
                 }
             });
@@ -677,8 +596,7 @@
         document.addEventListener('click', async (e) => {
             if (e.target.classList.contains('complete-task-btn')) {
                 if (!userId) {
-                    showView('view-account');
-                    authMessageText.textContent = "You must be logged in to complete a task and submit proof.";
+                    showMessage("You must be logged in to complete a task and submit proof.");
                     return;
                 }
                 const taskId = e.target.dataset.taskId;
@@ -772,8 +690,7 @@
         adsContainer.addEventListener('click', async (e) => {
             if (e.target.classList.contains('watch-ad-btn')) {
                 if (!userId) {
-                    showView('view-account');
-                    authMessageText.textContent = "You must be logged in to watch an ad and earn points.";
+                    showMessage("You must be logged in to watch an ad and earn points.");
                     return;
                 }
                 
@@ -836,8 +753,7 @@
             e.preventDefault();
             
             if (!userId) {
-                showView('view-account');
-                authMessageText.textContent = "You must be logged in to create a campaign.";
+                showMessage("You must be logged in to create a campaign.");
                 return;
             }
 
